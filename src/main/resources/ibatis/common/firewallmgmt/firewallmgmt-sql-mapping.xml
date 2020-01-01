@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.mysample.common.firewallmgmt">
+
+	<typeAlias alias="firewall" type="com.mysample.common.firewallmgmt.vo.Firewall" />
+
+	<resultMap class="firewall" id="firewallMap">
+		<result property="firewallID" column="FIREWALL_ID" />
+		<result property="sourceIP" column="SOURCE_IP" />
+		<result property="destinationIP" column="DESTINATION_IP" />
+		<result property="port" column="PORT" />
+		<result property="bound" column="BOUND" />
+		<result property="usedSystem" column="USED_SYSTEM" />
+		<result property="purpose" column="PURPOSE" />
+		<result property="changerID" column="CHANGER_ID" />
+		<result property="changeDate" column="CHANGE_DATE" />
+	</resultMap>
+
+	<select id="getFirewallList" parameterClass="firewall" resultMap="firewallMap">
+		<![CDATA[
+		SELECT
+			rawtohex(FIREWALL_ID) as FIREWALL_ID,
+			SOURCE_IP,
+			DESTINATION_IP,
+			PORT,
+			BOUND,
+			USED_SYSTEM,
+			PURPOSE,
+			CHANGER_ID,
+			CHANGE_DATE
+		FROM COM_FIREWALL
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="sourceIP" prepend="AND">
+				SOURCE_IP = #sourceIP#
+			</isNotEmpty>
+			<isNotEmpty property="destinationIP" prepend="AND">
+				DESTINATION_IP = #destinationIP#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="isExistSameFirewall" parameterClass="firewall" resultClass="boolean">
+		<![CDATA[
+		SELECT
+			rawtohex(FIREWALL_ID) as FIREWALL_ID,
+			SOURCE_IP,
+			DESTINATION_IP,
+			PORT,
+			BOUND,
+			USED_SYSTEM,
+			PURPOSE,
+			CHANGER_ID,
+			CHANGE_DATE
+		FROM COM_FIREWALL
+		WHERE
+			SOURCE_IP = #sourceIP#
+			and DESTINATION_IP = #destinationIP#
+			and PORT = #port#
+			and BOUND = #bound#
+			and USED_SYSTEM = #usedSystem#
+		]]>
+	</select>
+
+	<select id="getFirewall" parameterClass="firewall" resultMap="firewallMap">
+		<![CDATA[
+		SELECT
+			rawtohex(FIREWALL_ID) as FIREWALL_ID,
+			SOURCE_IP,
+			DESTINATION_IP,
+			PORT,
+			BOUND,
+			USED_SYSTEM,
+			PURPOSE,
+			CHANGER_ID,
+			CHANGE_DATE
+		FROM COM_FIREWALL
+		WHERE
+			FIREWALL_ID = hextoraw(#firewallID#)
+		]]>
+	</select>
+
+	<insert id="insertFirewall" parameterClass="firewall">
+		<![CDATA[
+		INSERT INTO
+		COM_FIREWALL(
+			FIREWALL_ID,
+			SOURCE_IP,
+			DESTINATION_IP,
+			PORT,
+			BOUND,
+			USED_SYSTEM,
+			PURPOSE,
+			CHANGER_ID,
+			CHANGE_DATE
+		)
+		VALUES(
+			hextoraw(#firewallID#),
+			#sourceIP#,
+			#destinationIP#,
+			#port#,
+			#bound#,
+			#usedSystem#,
+			#purpose#,
+			#changerID#,
+			sysdate
+		)
+		]]>
+	</insert>
+
+	<delete id="deleteFirewallAll">
+		<![CDATA[
+		DELETE FROM COM_FIREWALL
+		]]>
+	</delete>
+
+	<delete id="deleteFirewall" parameterClass="firewall">
+		<![CDATA[
+		DELETE FROM COM_FIREWALL
+		WHERE
+			FIREWALL_ID = hextoraw(#firewallID#)
+		]]>
+	</delete>
+
+	<update id="updateFirewall" parameterClass="firewall">
+		<![CDATA[
+		UPDATE COM_FIREWALL
+		SET
+			SOURCE_IP=#sourceIP#,
+			DESTINATION_IP=#destinationIP#,
+			PORT=#port#,
+			BOUND=#bound#,
+			USED_SYSTEM=#usedSystem#,
+			PURPOSE=#purpose#,
+			CHANGER_ID=#changerID#,
+			CHANGE_DATE=sysdate,
+		)
+		WHERE
+			FIREWALL_ID = hextoraw(#firewallID#)
+		]]>
+	</update>
+</sqlMap>
+
+
+
+

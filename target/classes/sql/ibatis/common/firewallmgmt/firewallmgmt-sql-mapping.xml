@@ -15,12 +15,13 @@
 		<result property="purpose" column="PURPOSE" />
 		<result property="changerID" column="CHANGER_ID" />
 		<result property="changeDate" column="CHANGE_DATE" />
+		<result property="deleteYN" column="DELETE_YN" />
 	</resultMap>
 
 	<select id="getFirewallList" parameterClass="firewall" resultMap="firewallMap">
 		<![CDATA[
 		SELECT
-			rawtohex(FIREWALL_ID) as FIREWALL_ID,
+			CAST(FIREWALL_ID AS varchar2(32)) as FIREWALL_ID,
 			SOURCE_IP,
 			DESTINATION_IP,
 			PORT,
@@ -28,10 +29,13 @@
 			USED_SYSTEM,
 			PURPOSE,
 			CHANGER_ID,
-			CHANGE_DATE
+			FORMATDATETIME(CHANGE_DATE,'yyyy-MM-dd') as CHANGE_DATE,
+			DELETE_YN
 		FROM COM_FIREWALL
+		WHERE
+			DELETE_YN = 'N'
 		]]>
-		<dynamic prepend="WHERE">
+		<dynamic>
 			<isNotEmpty property="sourceIP" prepend="AND">
 				SOURCE_IP = #sourceIP#
 			</isNotEmpty>
@@ -41,10 +45,10 @@
 		</dynamic>
 	</select>
 
-	<select id="isExistSameFirewall" parameterClass="firewall" resultClass="boolean">
+	<select id="getDuplicateFirewall" parameterClass="firewall" resultMap="firewallMap">
 		<![CDATA[
 		SELECT
-			rawtohex(FIREWALL_ID) as FIREWALL_ID,
+			CAST(FIREWALL_ID AS varchar2(32)) as FIREWALL_ID,
 			SOURCE_IP,
 			DESTINATION_IP,
 			PORT,
@@ -52,10 +56,12 @@
 			USED_SYSTEM,
 			PURPOSE,
 			CHANGER_ID,
-			CHANGE_DATE
+			FORMATDATETIME(CHANGE_DATE,'yyyy-MM-dd') as CHANGE_DATE,
+			DELETE_YN
 		FROM COM_FIREWALL
 		WHERE
-			SOURCE_IP = #sourceIP#
+			FIREWALL_ID <> CAST(#firewallID# AS RAW(16))
+			and SOURCE_IP = #sourceIP#
 			and DESTINATION_IP = #destinationIP#
 			and PORT = #port#
 			and BOUND = #bound#
@@ -66,7 +72,7 @@
 	<select id="getFirewall" parameterClass="firewall" resultMap="firewallMap">
 		<![CDATA[
 		SELECT
-			rawtohex(FIREWALL_ID) as FIREWALL_ID,
+			CAST(FIREWALL_ID AS varchar2(32)) as FIREWALL_ID,
 			SOURCE_IP,
 			DESTINATION_IP,
 			PORT,
@@ -74,10 +80,11 @@
 			USED_SYSTEM,
 			PURPOSE,
 			CHANGER_ID,
-			CHANGE_DATE
+			FORMATDATETIME(CHANGE_DATE,'yyyy-MM-dd') as CHANGE_DATE,
+			DELETE_YN
 		FROM COM_FIREWALL
 		WHERE
-			FIREWALL_ID = hextoraw(#firewallID#)
+			FIREWALL_ID = CAST(#firewallID# AS RAW(16))
 		]]>
 	</select>
 
@@ -93,10 +100,11 @@
 			USED_SYSTEM,
 			PURPOSE,
 			CHANGER_ID,
-			CHANGE_DATE
+			CHANGE_DATE,
+			DELETE_YN
 		)
 		VALUES(
-			hextoraw(#firewallID#),
+			CAST(#firewallID# AS RAW(16)),
 			#sourceIP#,
 			#destinationIP#,
 			#port#,
@@ -104,7 +112,8 @@
 			#usedSystem#,
 			#purpose#,
 			#changerID#,
-			sysdate
+			sysdate,
+			'N'
 		)
 		]]>
 	</insert>
@@ -119,9 +128,21 @@
 		<![CDATA[
 		DELETE FROM COM_FIREWALL
 		WHERE
-			FIREWALL_ID = hextoraw(#firewallID#)
+			FIREWALL_ID = CAST(#firewallID# AS RAW(16))
 		]]>
 	</delete>
+
+	<update id="updateFirewallToDelete" parameterClass="firewall">
+		<![CDATA[
+		UPDATE COM_FIREWALL
+		SET
+			CHANGER_ID=#changerID#,
+			CHANGE_DATE=sysdate,
+			DELETE_YN='Y'
+		WHERE
+			FIREWALL_ID = CAST(#firewallID# AS RAW(16))
+		]]>
+	</update>
 
 	<update id="updateFirewall" parameterClass="firewall">
 		<![CDATA[
@@ -134,10 +155,9 @@
 			USED_SYSTEM=#usedSystem#,
 			PURPOSE=#purpose#,
 			CHANGER_ID=#changerID#,
-			CHANGE_DATE=sysdate,
-		)
+			CHANGE_DATE=sysdate
 		WHERE
-			FIREWALL_ID = hextoraw(#firewallID#)
+			FIREWALL_ID = CAST(#firewallID# AS RAW(16))
 		]]>
 	</update>
 </sqlMap>

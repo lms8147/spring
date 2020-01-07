@@ -5,7 +5,7 @@ import com.mysample.common.firewallmgmt.vo.Firewall;
 
 public interface IFirewallService {
 
-  public boolean isExistSameFirewall(Firewall firewall);
+  public Firewall getDuplicateFirewall(Firewall firewall);
 
   public List<Firewall> getFirewallList(Firewall firewall);
 

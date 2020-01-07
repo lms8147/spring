@@ -11,10 +11,11 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-		<property name="driverClass" value="#{database['jdbc.driverClass']}" />
-		<property name="url" value="#{database['jdbc.url']}" />
-		<property name="username" value="#{database['jdbc.username']}" />
-		<property name="password" value="#{database['jdbc.password']}" />
+		<property name="driverClass" value="#{database['common.driverClass']}" />
+		<property name="url" value="#{database['common.url']}" />
+		<property name="username" value="#{database['common.username']}" />
+		<property name="password" value="#{database['common.password']}" />
+		<property name="connectionProperties" value="#{database['common.connectionProperties']}" />
 	</bean>
 
 </beans>

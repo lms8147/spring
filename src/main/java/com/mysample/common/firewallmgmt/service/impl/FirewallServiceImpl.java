@@ -13,10 +13,9 @@ public class FirewallServiceImpl implements IFirewallService {
   @Inject
   FirewallRepository firewallRepository;
 
-
   @Override
-  public boolean isExistSameFirewall(Firewall firewall) {
-    return firewallRepository.isExistSameFirewall(firewall);
+  public Firewall getDuplicateFirewall(Firewall firewall) {
+    return firewallRepository.getDuplicateFirewall(firewall);
   }
 
   @Override

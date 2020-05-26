@@ -5,6 +5,20 @@
 	id="WebApp_ID" version="2.5">
 	<display-name>spring</display-name>
 
+	<resource-ref>
+		<description>U1 DB Connection</description>
+		<res-ref-name>u1DB</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+
+	<resource-ref>
+		<description>U2 DB Connection</description>
+		<res-ref-name>u2DB</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:/spring/context-*.xml</param-value>
@@ -19,7 +33,7 @@
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
 		<init-param>
 			<param-name>encoding</param-name>
-			<param-value>EUC-KR</param-value>
+			<param-value>UTF-8</param-value>
 		</init-param>
 	</filter>
 

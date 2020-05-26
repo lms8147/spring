@@ -10,12 +10,45 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-		<property name="driverClass" value="#{database['common.driverClass']}" />
-		<property name="url" value="#{database['common.url']}" />
-		<property name="username" value="#{database['common.username']}" />
-		<property name="password" value="#{database['common.password']}" />
+	<bean id="u1DataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName" value="#{database['common.driverClass']}" />
+		<property name="url" value="#{database['common.u1.url']}" />
+		<property name="username" value="#{database['common.u1.username']}" />
+		<property name="password" value="#{database['common.u1.password']}" />
 		<property name="connectionProperties" value="#{database['common.connectionProperties']}" />
+
+
+		<!-- 4개의 설정은 동일하게 설정하는 것이 예외 케이스를 줄일 수 있음 -->
+		<property name="initialSize" value="20"/>
+		<property name="maxTotal" value="20"/>
+		<property name="maxIdle" value="20"/>
+		<property name="minIdle" value="20"/>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="u1TxManager"/>
+
+	<bean id="u1TxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="u1DataSource" />
+	</bean>
+
+	<bean id="u2DataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName" value="#{database['common.driverClass']}"/>
+		<property name="url" value="#{database['common.u2.url']}"/>
+		<property name="username" value="#{database['common.u2.username']}"/>
+		<property name="password" value="#{database['common.u2.password']}"/>
+		<property name="connectionProperties" value="#{database['common.connectionProperties']}"/>
+
+		<!-- 4개의 설정은 동일하게 설정하는 것이 예외 케이스를 줄일 수 있음 -->
+		<property name="initialSize" value="20"/>
+		<property name="maxTotal" value="20"/>
+		<property name="maxIdle" value="20"/>
+		<property name="minIdle" value="20"/>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="u2TxManager"/>
+
+	<bean id="u2TxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="u2DataSource" />
 	</bean>
 
 </beans>

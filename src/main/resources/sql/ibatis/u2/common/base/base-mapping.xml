@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.mysample.u2.common.base">
+
+	<typeAlias alias="person" type="com.mysample.common.base.vo.Person" />
+
+	<resultMap class="person" id="personMap">
+		<result property="name" column="NAME" />
+		<result property="age" column="AGE" />
+	</resultMap>
+
+	<select id="getPersonList" resultMap="personMap">
+		<![CDATA[
+		SELECT *
+		FROM PERSON
+		]]>
+	</select>
+
+	<insert id="insertPerson" parameterClass="person">
+		<![CDATA[
+		INSERT INTO
+		PERSON(
+			NAME,
+			AGE
+		)
+		VALUES(
+			#name#,
+			#age#
+		)
+		]]>
+	</insert>
+
+	<delete id="deletePersonAll">
+		<![CDATA[
+		DELETE FROM PERSON
+		]]>
+	</delete>
+</sqlMap>
+
+
+
+

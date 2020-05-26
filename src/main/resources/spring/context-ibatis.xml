@@ -10,13 +10,22 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation" value="classpath:sql/ibatis/common/sql-map-config.xml" />
+	<bean id="u1SqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="u1DataSource" />
+		<property name="configLocation" value="classpath:sql/ibatis/u1/common/sql-map-config.xml" />
 	</bean>
 
-	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
-		<property name="sqlMapClient" ref="sqlMapClient" />
+	<bean id="u1SqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="u1SqlMapClient" />
+	</bean>
+
+	<bean id="u2SqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="dataSource" ref="u2DataSource" />
+		<property name="configLocation" value="classpath:sql/ibatis/u2/common/sql-map-config.xml" />
+	</bean>
+
+	<bean id="u2SqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="u2SqlMapClient" />
 	</bean>
 
 </beans>

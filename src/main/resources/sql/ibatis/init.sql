@@ -13,3 +13,9 @@ create table COM_FIREWALL(
 	CONSTRAINT firewall_id UNIQUE (SOURCE_IP, DESTINATION_IP, PORT, BOUND, USED_SYSTEM) 
 )
 ;
+
+create table Person (
+    name varchar2(20),
+    age int,
+    primary key (name)
+);

@@ -27,7 +27,7 @@ public class U1PersonServiceImpl implements IU1PersonService {
   @Override
   public void insertU1Person(Person person){
     u1PersonRepository.insertPerson(person);
-    u2PersonService.insertU2Person(person);
+
     //throw new RuntimeException("insertU1Person");
   }
 

@@ -31,5 +31,9 @@ public class U1PersonServiceImpl implements IU1PersonService {
     //throw new RuntimeException("insertU1Person");
   }
 
+  public void a(){
+
+  }
+
 
 }

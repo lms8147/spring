@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface IU1PersonService {
 
-    @Transactional(value = "u1TxManager")
+
     List<Person> getU1PersonList();
 
-    @Transactional(value = "u1TxManager", rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     void insertU1Person(Person person);
 
 }
